@@ -268,6 +268,46 @@ function [mean_start, mean_end] = roi_bounds_image_2(img, threshold, min_length,
     mean_end = round(mean(valid_bounds(:, 2)));
 end
 
+function plot_images_grid(folder_path, results)
+    % Visualizza massimo 9 immagini in griglia 3x3 con bounding box (se fornita)
+    % INPUT:
+    %   folder_path - percorso immagini .tiff
+    %   results     - tabella opzionale con bounding box per ogni immagine
+
+    image_files = dir(fullfile(folder_path, '*.tiff'));
+    num_images = min(9, length(image_files));
+
+    if num_images == 0
+        error('Nessuna immagine trovata nella cartella %s', folder_path);
+    end
+
+    figure('Name', 'Grid 3x3', 'Units', 'normalized', 'Position', [0.1 0.1 0.8 0.8]);
+
+    for i = 1:num_images
+        fname = image_files(i).name;
+        fullpath = fullfile(folder_path, fname);
+        img = imread(fullpath);
+
+        subplot(3,3,i);
+        imshow(img, []); hold on;
+        title(fname, 'Interpreter','none', 'FontSize', 9);
+
+        % Se fornita, disegna bounding box
+        if nargin > 1 && ~isempty(results)
+            idx = find(strcmp(results.Filename,fname));
+            if ~isempty(idx)
+                x1 = results.ROI_X1(idx);
+                x2 = results.ROI_X2(idx);
+                y1 = results.ROI_Y1(idx);
+                y2 = results.ROI_Y2(idx);
+                if all(~isnan([x1 x2 y1 y2]))
+                    rectangle('Position', [x1, y1, x2 - x1, y2 - y1], ...
+                              'EdgeColor', 'r', 'LineWidth', 1.5);
+                end
+            end
+        end
+    end
+end
 
 %/////////////////////////////////////////////////////
 %               P A R A M E T E R S                  /
@@ -330,8 +370,10 @@ typical_xrange = [360 750];
 %plot_single_roi(img_raw, roi_y1, roi_y2, 'y', 'Image_69.tiff');
 %plot_crop_box(img_raw, roi_x1, roi_x2, roi_y1, roi_y2, sprintf("%s con x-range", filename));
 %plot_box_only(img_raw, roi_x1, roi_x2, roi_y1, roi_y2, sprintf("%s con x-range", filename));
-step = 50; 
-plot_intensity_profiles_grid(img_raw, step); % prints once every step lines 
+%step = 50; 
+%plot_intensity_profiles_grid(img_raw, step); % prints once every step lines 
+my_results = readtable("CV@TR2\outputs\roi_results.csv");
+plot_images_grid(path_folder, my_results);
 close_all_figures();
 
 %% TEST on multiple FILES
