@@ -341,6 +341,17 @@ function img_multiplots(img_start, img_end, num_img, folder)
     end
 end
 
+function img_singleplot(folder, number)
+    filename = fullfile(folder, sprintf("Image_%d.tiff", number));
+    
+    if ~isfile(filename)
+        error("❌ File non trovato: %s", filename);
+    end
+    img = imread(filename);
+    figure;
+    imshow(img, []);    
+    title(sprintf("Adjust image\nFilename: %s", sprintf("Image_%d.tiff", number)), 'Interpreter','none');
+end
 %/////////////////////////////////////////////////////
 %               P A R A M E T E R S                  /
 %/////////////////////////////////////////////////////
@@ -380,15 +391,21 @@ fullname = path_folder + filename;
 fprintf('Analyzing file %s ...\n', fullname);
 img_raw = imread(fullname);
 imshow(img_raw,[]);
+hold on;
 
 % Define restricted x-range to belt zone
-title("Draw a horizontal line over the belt zone...");
-h = drawline('Color','r','LineWidth',2);
-points = round(h.Position);
-left_x = min(points(:,1));
-right_x = max(points(:,1));
-fprintf("You selected zone: [%d,%d]\n", left_x, right_x);
-x_range = [left_x, right_x];
+choice = input("Want to draw the x-range? [y/n]", 's');
+if choice == 'y'
+    title("Draw a horizontal line over the belt zone...");
+    h = drawline('Color','r','LineWidth',2);
+    points = round(h.Position);
+    left_x = min(points(:,1));
+    right_x = max(points(:,1));
+    fprintf("You selected zone: [%d,%d]\n", left_x, right_x);
+    x_range = [left_x, right_x];
+else
+    fprintf("Typical range will be set to: [360:750].")
+end
 %}
 
 % ROIx e ROIy
@@ -406,7 +423,8 @@ typical_xrange = [360 750];
 %plot_intensity_profiles_grid(img_raw, step); % prints once every step lines 
 %my_results = readtable("CV@TR2\outputs\roi_results.csv");
 %img_multiplots_roi(path_folder, my_results);
-img_multiplots(1,50,100, path_folder);
+%img_multiplots(15,25,10, path_folder);
+img_singleplot(path_folder, 5)
 
 close_all_figures();
 
