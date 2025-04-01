@@ -1,7 +1,7 @@
 %% ANALYSIS of INTENSITY: good apples VS evil apples
 
 % === Parametri iniziali ===
-csv_path = 'CV@TR2\outputs\roi_results.csv';
+csv_path = 'CV@TR2\test_images\apples_images\roi_results.csv';
 image_folder = 'CV@TR2\test_images\apples_images';  % cartella immagini
 intensity_threshold_low = 1000;   % soglia pixel scuri
 intensity_threshold_high = 1500;  % soglia pixel luminosi
@@ -46,6 +46,39 @@ for i = 1:height(roi_data)
     roi = img(y1:y2, x1:x2);
     roi_vect = roi(:); % flatten matrix into 1D columnwise vector
     
+    % === Estrazione e salvataggio ROI estesa (con margine 20%) ===
+    [img_h, img_w] = size(img);  % dimensioni dell'immagine
+    roi_width = x2 - x1 + 1;
+    roi_height = y2 - y1 + 1;
+
+    % Calcolo del margine (20% delle dimensioni originali)
+    margin_x = round(roi_width * 0.2);
+    margin_y = round(roi_height * 0.2);
+
+    % Nuove coordinate con margine
+    x1_ext = max(1, x1 - margin_x);
+    x2_ext = min(img_w, x2 + margin_x);
+    y1_ext = max(1, y1 - margin_y);
+    y2_ext = min(img_h, y2 + margin_y);
+
+    % Estrai ROI estesa e salva l'immagine
+    roi_extended = img(y1_ext:y2_ext, x1_ext:x2_ext);
+    output_folder = fullfile(image_folder, 'apples_images_mroi');
+
+    if ~exist(output_folder, 'dir')
+    mkdir(output_folder);
+    end
+
+    % Crea nome file di output
+    [~, name, ~] = fileparts(img_name);
+    out_img_name = sprintf('mroi_%s.png', name);
+    % Normalizza il contrasto tra 0 e 255
+    roi_norm = mat2gray(roi_extended);          % normalizza tra 0 e 1
+    roi_scaled = uint8(roi_norm * 255);         % converti in uint8 per visualizzazione
+    % Salva immagine
+    imwrite(roi_scaled, fullfile(output_folder, out_img_name));
+
+
     % === Calcolo feature spettrali ===
     mean_int = mean(roi_vect);
     fprintf("Mean of %d is: %f\n", i, mean_int);
@@ -99,7 +132,7 @@ for i = 1:height(roi_data)
 end
 
 % === Salva su file CSV ===
-writetable(results, 'CV@TR2\test_images\apples_images\roi_features_full2.csv');
+writetable(results, 'CV@TR2\test_images\apples_images\apples_images_mroi\mroi_features.xlsx');
 fprintf("❌ Number of images invalid: %d\n", roi_skipped);
 for i=1:length(roi_skipped_names)
     fprintf("%s\n", roi_skipped_names(i));

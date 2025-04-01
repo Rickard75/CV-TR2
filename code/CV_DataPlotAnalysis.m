@@ -79,7 +79,7 @@ end
 % Funzione ausiliaria per classificazione
 function labels = classify_apples_simple(T)
     labels = strings(height(T), 1);
-    labels(T.mean_intensity > 2000 & T.entropy > 6 & T.percent_above_3000 > 0.6) = "buona";
+    labels(T.mean_intensity > 1500 & T.entropy > 6 & T.percent_above_3000 > 0.6) = "buona";
     labels(labels == "") = "cattiva";
 end
 
@@ -89,7 +89,7 @@ end
 %/////////////////////////////////////////////////////
 
 
-T = readtable("CV@TR2/test_images/apples_images/apples_images_clean_thr800/features_clean_thr800.xlsx");
+T = readtable("CV@TR2/test_images/apples_images/apples_images_mroi/mroi_features.xlsx");
 T = analyze_features(T);
-writetable(T, "CV@TR2/test_images/apples_images/apples_images_clean_thr800/apples_classification_thr800.xlsx")
+writetable(T, "CV@TR2/test_images/apples_images/apples_images_mroi/mroi_labeled_features.xlsx")
 close_all_figures();

@@ -405,11 +405,11 @@ if choice == 'y'
     x_range = [left_x, right_x];
 else
     fprintf("Typical range will be set to: [360:750].")
+    x_range = [360 750];
 end
 %}
 
 % ROIx e ROIy
-typical_xrange = [360 750];
 %[roi_x1, roi_x2] = roi_bounds_image(img_raw, thr_appleX, min_lengthX, 'x'); %364,742
 [roi_y1, roi_y2] = roi_bounds_image(img_raw, thr_appleY, min_lengthY, 'y');
 [roi_x1, roi_x2] = roi_bounds_image_2(img_raw, thr_appleX, min_lengthX, 'x', x_range);
@@ -424,7 +424,7 @@ typical_xrange = [360 750];
 %my_results = readtable("CV@TR2\outputs\roi_results.csv");
 %img_multiplots_roi(path_folder, my_results);
 %img_multiplots(15,25,10, path_folder);
-img_singleplot(path_folder, 5)
+img_singleplot(path_folder, 25)
 
 close_all_figures();
 
