@@ -89,7 +89,7 @@ end
 %/////////////////////////////////////////////////////
 
 
-T = readtable("CV@TR2/test_images/apples_images/apples_images_mroi/mroi_features.xlsx");
+T = readtable("../test_images/apples_images/apples_images_mroi/mroi_features.xlsx");
 T = analyze_features(T);
-writetable(T, "CV@TR2/test_images/apples_images/apples_images_mroi/mroi_labeled_features.xlsx")
+writetable(T, "../test_images/apples_images/apples_images_mroi/mroi_labeled_features_TEST.xlsx")
 close_all_figures();

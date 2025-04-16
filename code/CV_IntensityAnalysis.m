@@ -1,6 +1,6 @@
 %% Open and Plot Intensity Histogram over entire image
 
-folder = "test_images/apples_images/";
+folder = "../test_images/apples_images/";
 filenumber = input("Insert image number (without path): "); % use ""
 filename = "Image_" + filenumber + ".tiff";
 fullname = folder + filename;
@@ -37,6 +37,11 @@ fprintf("Min: %d, Max: %d, Mean: %.2f, Std: %.2f\n", ...
 % 4. repeat for N images
 
 %% 1.1X Finding ROIx for one single LINE (1x1024)
+
+folder = "../test_images/apples_images/";
+filenumber = input("Insert image number (without path): "); % use ""
+filename = "Image_" + filenumber + ".tiff";
+fullname = folder + filename;
 
 img_raw = imread(fullname);
 row_idx = round(size(img_raw,1) / 2); % for instance, the central line
@@ -445,7 +450,7 @@ fprintf('Analysis completed.\n---------------------------------------------\n')
 %% Visualize CENTER LINES plots for MULTIPLE IMAGES
 function show_center_lines(selection)
     % === PARAMETERS ===
-    folder_path = "test_images/apples_images";
+    folder_path = "../test_images/apples_images";
     thr_apple = 2000;
     min_length = 100;
 

@@ -1,5 +1,5 @@
 
-% 1) Basic Image Import, Processing, and Export
+%% 1) Basic Image Import, Processing, and Export
 
 I = imread("pout.tif");
 imshow(I) % show the image
@@ -13,7 +13,7 @@ imshow(I2)
 title("L'immagine di una bambina - Contrasto Elevato")
 imwrite(I2, "pout.png") % saves in same directory of this script
 
-% 2) Detect and Measure Circular Objects in an Image
+%% 2) Detect and Measure Circular Objects in an Image
 
 rgb = imread("coloredChips.png");
 imshow(rgb)
@@ -30,16 +30,18 @@ imshow(gray_image)
 [centers, radii] = imfindcircles(rgb,[20 25], ObjectPolarity="dark", Sensitivity=0.9); % increase Sensitivity to get more circles detected
 imshow(rgb)
 h = viscircles(centers,radii);
-length(centers)
+disp(centers)
+pause(3);
 delete(h); % reset previous call
+close all;
 
-% TWO-STAGE METHOD
+%% TWO-STAGE METHOD
 [centers, radii] = imfindcircles(rgb,[20 25],ObjectPolarity="dark",Sensitivity=0.92,Method="twostage");
 delete(h)
 h=viscircles(centers,radii) % visualize detected circles on canvas
 
 % How to detect yellow chips
-imgshow(gray_image)
+imshow(gray_image)
 [centersBright, radiiBright] = imfindcircles(rgb,[20 25],ObjectPolarity="bright",Sensitivity=0.92,Method="twostage");
 hBright = viscircles(centersBright, radiiBright, Color="b"); % change border color of detected circles
 hBright = viscircles(centersBright, radiiBright, 'LineStyle','--'); % change borders into dashed lines
@@ -53,11 +55,13 @@ h=viscircles(centers,radii, 'Color','m','LineStyle','--')
 [centersBright, radiiBright, metricBright] = imfindcircles(rgb,[20 25],ObjectPolarity="bright",Sensitivity=0.92,EdgeThreshold=0.1); % gradient threshold to distinguish edge pixels from non-edge pixels
 hBright = viscircles(centersBright,radiiBright,'Color','b','LineStyle','--');
 
-% 3) Correct Nonuniform Illumination and Analyze Foreground Objects
+%% 3) Correct Nonuniform Illumination and Analyze Foreground Objects
+default_pause = 2;
 
 img = imread('rice.png');
 imshow(img);
-pause(3);
+title("Raw image");
+pause(default_pause);
 close;
 
 % removing foreground with structuring elements and getting the clean image
@@ -65,14 +69,17 @@ close;
 se = strel('disk',15);
 background = imopen(img,se); % i) img with no foreground
 imshow(background);
-pause(3);
+title("Background without foreground");
+pause(default_pause);
 close;
 img_nobkg = img - background; % ii) foreground with no bkg
 imshow(img_nobkg); % it's now too dark for analysis
-pause(3);
+title("Foreground without background");
+pause(default_pause);
 close;
 img_clean = imadjust(img_nobkg); % iii) adjust contrast
 imshow(img_clean)
+title("No background and adjusted contrast")
 
 img_clean_fast = imadjust(imtophat(img,strel('disk',15))); % as one line command
 
@@ -80,7 +87,8 @@ img_clean_fast = imadjust(imtophat(img,strel('disk',15))); % as one line command
 img_bin = imbinarize(img_clean);
 img_bin = bwareaopen(img_bin,50); % remove objects with less than 50px (area opening)
 imshow(img_bin);
-pause(3);
+title("Binary image: removed objects under fixed area threshold");
+pause(default_pause);
 close;
 
 % identify objects 
@@ -89,13 +97,18 @@ cc.NumObjects
 grain_50th = false(size(img_bin)); % creates total black binary matrix same size of img_bin
 grain_50th(cc.PixelIdxList{50}) = true; % extract 50th item from cc object
 imshow(grain_50th)
+title("Isolate 50th object detected");
+pause(default_pause);
 
 lm = labelmatrix(cc); % transform cc into standard matrix object feasibile to label
 whos lm
 RGB_label = label2rgb(lm, 'spring','c','shuffle');
-imshow(RGB_labell)
+imshow(RGB_label)
+title("RGB label");
+pause(default_pause);
+close all;
 
-% compute area based statistics
+%% compute area based statistics
 grain_data = regionprops(cc,'basic'); %measures properties such as area, centroid, and bounding box, for each object (connected component) in an image
 grain_areas = [grain_data.Area];
 grain_50th_area = grain_areas(50);
@@ -107,8 +120,6 @@ imshow(grain_min_area)
 
 histogram(grain_areas)
 title('Rice Area Distribution')
-
-% TESTS for SINGLE CELLS RUN
 
 %% Test - start executable section here
 img_test = imread("saturn.png")
@@ -177,7 +188,7 @@ Paris, France.
 %% Analyze an apple image
 default_pause = 0.5; % seconds
 
-filename = ('test_images/Image_75.tiff');
+filename = ('../test_images/apples_images/Image_75.tiff');
 img_SWIR_test = imread(filename);
 imshow(img_SWIR_test, []) % automatically adapt contrast
 title("La mela")
@@ -186,8 +197,8 @@ pos = d_obj.Position; % vettore [x1,y1;x2,y2]
 diffPos = diff(pos); % (x2-x1, y2-y1)
 d_ref = hypot(diffPos(1),diffPos(2));
 area_ref = pi * (d_ref/2)^2;
-fprintf("Reference diameter of an apple: %.2f px\n", d_value);
-fprintf("Reference area of an apple: %.2f px\n", pi*(d_value/2)^2);
+fprintf("Reference diameter of an apple: %.2f px\n", d_ref);
+fprintf("Reference area of an apple: %.2f px\n", pi*(d_ref/2)^2);
 
 %pause(default_pause);
 %close;

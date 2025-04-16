@@ -23,47 +23,16 @@ function preprocess_SWIR(filename)
     % === Visualizzazione comparativa ===
     figure('Name', sprintf('Preprocessing SWIR - %s', filename), 'NumberTitle', 'off');
 
-    subplot(2, 4, 1);
-    imshow(img_raw, []); title("Originale");
-
-    subplot(2, 4, 2);
-    imshow(img_denoised, []); title("Denoised");
-
-    subplot(2, 4, 3);
-    imshow(img_contrast, []); title("Contrast Stretched");
-
-    subplot(2, 4, 4);
-    imshow(img_clahe, []); title("CLAHE");
-
-    subplot(2, 4, 5);
-    imshow(edge_map); title("Edge - Canny");
-
-    subplot(2, 4, 6);
-    imshow(entropy_map, []); title("Entropy");
-
-    subplot(2, 4, 7);
-    imshow(range_map, []); title("Range");
-
-    subplot(2, 4, 8);
-    imshow(std_local, []); title("Std Local");
+    subplot(3, 3, 1); imshow(img_raw, []); title("Originale");
+    subplot(3, 3, 2); imshow(img_denoised, []); title("Denoised");
+    subplot(3, 3, 3); imshow(img_contrast, []); title("Contrast Stretched");
+    subplot(3, 3, 4); imshow(img_clahe, []); title("CLAHE");
+    subplot(3, 3, 5); imshow(edge_map); title("Edge - Canny");
+    subplot(3, 3, 6); imshow(entropy_map, []); title("Entropy");
+    subplot(3, 3, 7); imshow(range_map, []); title("Range");
+    subplot(3, 3, 8); imshow(std_local, []); title("Std Local");
 
     % === Statistiche di base ===
-    min_val = min(img_raw(:));
-    max_val = max(img_raw(:));
-    mean_val = mean(img_raw(:));
-    std_val = std(double(img_raw(:)));
-
-    fprintf("Min: %d, Max: %d, Mean: %.2f, Std: %.2f\n", ...
-        min_val, max_val, mean_val, std_val);
-
-    % Istogramma separato
-    figure('Name', 'Istogramma Intensità');
-    histogram(img_raw(:), 512);
-    title('Intensità SWIR');
-    xlabel('Intensità [a.u.]');
-    ylabel('Pixel count');
-
-    % FASE 7: Statistiche globali
     min_val = min(img_raw(:));
     max_val = max(img_raw(:));
     mean_val = mean(img_raw(:));
@@ -88,10 +57,17 @@ end
 
 
 
-fileList = dir('test_images/*.tiff');
+%% Show multiple views for all the dataset
+fileList = dir('../test_images/apples_images/*.tiff');
 
 for k = 1:length(fileList)
     filename = fullfile(fileList(k).folder, fileList(k).name);
     preprocess_SWIR(filename);
     pause(1); % per evitare apertura immagini troppo rapida
 end
+
+%% Show multiple view for one single image
+ filename = '../test_images/apples_images/Image_77.tiff';
+ preprocess_SWIR(filename);
+ pause(3);
+ close();

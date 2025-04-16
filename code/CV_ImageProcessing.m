@@ -21,7 +21,7 @@ function close_all_figures()
 end
 
 % Loading image
-path_folder = "CV@TR2/test_images/apples_images/"; 
+path_folder = "../test_images/apples_images/"; 
 img_id = input("Insert image id: ");
 filename = "Image_" + img_id + ".tiff";
 fullname = path_folder + filename;

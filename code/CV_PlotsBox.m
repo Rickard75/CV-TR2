@@ -384,7 +384,7 @@ every image in the selected folder.
 %}
 
 % Loading image
-path_folder = "CV@TR2/test_images/apples_images/"; 
+path_folder = "../test_images/apples_images/"; 
 img_id = input("Insert image id: ");
 filename = "Image_" + img_id + ".tiff";
 fullname = path_folder + filename;
@@ -415,16 +415,16 @@ end
 [roi_x1, roi_x2] = roi_bounds_image_2(img_raw, thr_appleX, min_lengthX, 'x', x_range);
 
 % UNCOMMENT to RUN
-%plot_single_roi(img_raw, roi_x1, roi_x2, 'x', 'Image_69.tiff');
-%plot_single_roi(img_raw, roi_y1, roi_y2, 'y', 'Image_69.tiff');
+%plot_single_roi(img_raw, roi_x1, roi_x2, 'x', fullname);
+%plot_single_roi(img_raw, roi_y1, roi_y2, 'y', fullname);
 %plot_crop_box(img_raw, roi_x1, roi_x2, roi_y1, roi_y2, sprintf("%s con x-range", filename));
-%plot_box_only(img_raw, roi_x1, roi_x2, roi_y1, roi_y2, sprintf("%s con x-range", filename));
-%step = 50; 
-%plot_intensity_profiles_grid(img_raw, step); % prints once every step lines 
+plot_box_only(img_raw, roi_x1, roi_x2, roi_y1, roi_y2, sprintf("%s con x-range", filename));
+step = 50; 
+plot_intensity_profiles_grid(img_raw, step); % prints once every step lines 
 %my_results = readtable("CV@TR2\outputs\roi_results.csv");
 %img_multiplots_roi(path_folder, my_results);
 %img_multiplots(15,25,10, path_folder);
-img_singleplot(path_folder, 25)
+%img_singleplot(path_folder, 59)
 
 close_all_figures();
 
