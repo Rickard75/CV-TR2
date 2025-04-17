@@ -1,1 +1,19 @@
+
+# Cache e Python
+__pycache__/
+*.pyc
+*.pyo
+
+# Jupyter notebook cache
+.ipynb_checkpoints/
+
+# Cartelle dati pesanti
 dataset/
+
+
+# Ambienti virtuali
+.venv/
+env/
+
+# IDE/Editor files
+.vscode/
